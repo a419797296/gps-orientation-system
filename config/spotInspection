@@ -1,0 +1,39 @@
+config socket-iface 'server'
+	option ip '1.1.1.1'
+	option port '3333'
+
+config socket-iface 'cloud'
+	option ip '139.196.240.105'
+	option port '9518'
+	option websit 'www.chukang.xin'
+#	option ip '192.168.31.210'      
+#	option port '6000'
+
+config socket-iface 'ser2net'
+	option ip '127.0.0.1'
+	option port '6666'
+
+config product-info 'product_info'
+	option mac '00:ca:01:0f:00:01'
+	option hw_vers '170327'
+	option sw_vers '170327'
+
+config parameter 'para'
+	option interval '5' 
+
+config ssid_list 'ssidList'
+	option ssid4 'null'
+	option ssid5 'null'
+	option ssid0 'HUISHU'
+	option ssid1 'Huishu'
+	option ssid2 'Guest'
+	option ssid3 'ChinaNet-FK0g'
+
+config wifi_info 'wifiInfo'
+	option ssid '0'
+	option key 'huishu505'
+
+
+
+
+
