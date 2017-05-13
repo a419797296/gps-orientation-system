@@ -1,5 +1,5 @@
 ##############################################
-# OpenWrt Makefile for spotInspection program
+# OpenWrt Makefile for gps_orientation_system program
 #
 #
 # Most of the variables used here are defined in
@@ -17,8 +17,8 @@
 ##############################################
 include $(TOPDIR)/rules.mk
 # Name and release number of this package
-PKG_NAME:=spotInspection
-PKG_RELEASE:=1
+PKG_NAME:=gps_orientation_system
+PKG_RELEASE:=1.0.0
 
 
 # This specifies the directory where we're going to build the program. 
@@ -34,21 +34,21 @@ include $(INCLUDE_DIR)/package.mk
 # If you are running Kamikaze, delete the DESCRIPTION
 # variable below and uncomment the Kamikaze define
 # directive for the description below
-define Package/spotInspection
+define Package/gps_orientation_system
 	SECTION:=utils
 	CATEGORY:=Utilities
 	DEPENDS:=+libpthread
-	TITLE:=spotInspection -- for system use
+	TITLE:=gps_orientation_system  -- for gps orientation through the zigbee communication
 endef
 
 
 # Uncomment portion below for Kamikaze and delete DESCRIPTION variable above
-define Package/spotInspection/description
+define Package/gps_orientation_system/description
 	If you can't figure out what this program does, you're probably
 	brain-dead and need immediate medical attention.
 endef
 
-define Package/spotInspection/conffiles
+define Package/gps_orientation_system/conffiles
 	/etc/config/spotIinspection
 endef
 
@@ -76,7 +76,7 @@ endef
 # directory if it does not already exist.  Likewise $(INSTALL_BIN) contains the
 # command to copy the binary file from its current location (in our case the build
 # directory) to the install directory.
-define Package/spotInspection/install
+define Package/gps_orientation_system/install
 	$(INSTALL_DIR) $(1)/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/spotInspection $(1)/bin/
 	
@@ -100,9 +100,18 @@ define Package/spotInspection/install
 	
 endef
 
+define Package/$(PKG_NAME)/postinst
+#!/bin/sh 
+[ -n "${IPKG_INSTROOT}" ] || {
+	/etc/init.d/spotInspection enable
+	/etc/init.d/spotInspection start
+	echo starting the app ...
+	exit 0
+}
+endef
 
 # This line executes the necessary commands to compile our program.
 # The above define directives specify all the information needed, but this
 # line calls BuildPackage which in turn actually uses this information to
 # build a package.
-$(eval $(call BuildPackage,spotInspection))
+$(eval $(call BuildPackage,gps_orientation_system))

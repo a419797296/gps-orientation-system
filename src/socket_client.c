@@ -17,7 +17,7 @@
 #include "socket_driver.h"
 #include "com_tools.h"
 #include "main.h"
-#include "oxygen_flow.h"
+#include "gps.h"
 
 SOCKET_INTERFACE cloud_iface;
 
@@ -64,7 +64,7 @@ Return Value: always 0
 int client_run(pthread_t *threadID)
 {
     client_init();
-	  oxygenFlowRun();
+	//  gpsRun();
     pthread_create(threadID, NULL, client_thread, (void *)NULL);
     printf("launching client thread #%02d\n", (int)(*threadID));
     pthread_detach(*threadID);

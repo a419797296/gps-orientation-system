@@ -22,7 +22,7 @@
 #include "cJSON.h"
 #include "main.h"
 #include "wifi_config.h"
-#include "oxygen_flow.h"
+#include "gps.h"
 
 int socket_bussiness(void)
 {
@@ -32,17 +32,7 @@ int socket_bussiness(void)
     {
         pthread_mutex_lock(&db);    
         pthread_cond_wait(&db_update, &db);
-	 /*if(check_connectiong(5) != 0)
-  		system("/root/led.sh blink_fast tp-link:blue:system");	//flash the led if the network is not ready 
-	if(!SocketConnected(cloud_iface.fd))
-		{
-		printf("have not connect to the server");
-		if(check_connectiong(5) == 0)
-			client_run(&cloud_iface.threadID);
-		else
-			printf("please check the network connection");
-	}*/
-		
+
         printf("recieved the data is %s---------------\n",t_data_info.data);
         doit(&t_data_info);
 		pthread_mutex_unlock( &db );// 原子操作结束
@@ -73,7 +63,7 @@ jsonType judgeJsonType(PT_Data_Info pt_data_info)
     }
     else if(*receivedData==0x16)
     	{
-        	json_type = JSON_TYPE_OXYGEN_REPOART;
+        	json_type = JSON_TYPE_GPS_REPOART;
 		pt_data_info->dest_fd = cloud_iface.fd;
     	}
     else
@@ -113,17 +103,15 @@ void doit(PT_Data_Info pt_data_info)
     case JSON_TYPE_ERROR:
         printf("jsonType is ERROR\r\n");
         break;
-    // case JSON_TYPE_CONTROL_CMD:
-    //     printf("jsonType is CONTROL_CMD\r\n");
-    //     doControlInfo(receivedData);
-    //     break;
+
      case JSON_TYPE_GETWAY_TO_ZIGBEE:
          printf("jsonType is GETWAY_TO_ZIGBEE\r\n");
-         socketWriteNoEnd(ser2net_iface.fd, pt_data_info->data, pt_data_info->length);   //+1 means sent '/0' together
+         socketWriteNoEnd(pt_data_info->dest_fd, pt_data_info->data, pt_data_info->length);   //+1 means sent '/0' together
          break;
      case JSON_TYPE_ZIGBEE_TO_GETWAY:
          printf("jsonType is ZIGBEE_TO_GETWAY\r\n");
-          socketWriteNoEnd(cloud_iface.fd, pt_data_info->data, pt_data_info->length);   //+1 means sent '/0' together
+	gpsReport(pt_data_info);
+         // socketWriteNoEnd(pt_data_info->dest_fd, pt_data_info->data, pt_data_info->length);   //+1 means sent '/0' together
           break;
 
     case JSON_TYPE_WIFI_CONFIG:
@@ -135,24 +123,24 @@ void doit(PT_Data_Info pt_data_info)
         }
         else
         {
-            printf("---------------connect-----\n");
             write(pt_data_info->orig_fd,"connect",sizeof("connect"));
+            printf("---------------connect-----\n");
             client_run(&cloud_iface.threadID);            
         }
 
         break;
 	case JSON_TYPE_INTERVAL_CONFIG:
 		printf("jsonType is JSON_TYPE_INTERVAL_CONFIG\r\n");
-		oxygenFlowCfgTm(pt_data_info);
+		//gpsCfgTm(pt_data_info);
 	break;
 
 	case JSON_TYPE_SERVER_CONFIG:
 		printf("jsonType is JSON_TYPE_SERVER_CONFIG\r\n");
-		oxygenFlowCfgServer(pt_data_info);
+		//gpsCfgServer(pt_data_info);
 	break;
 	
-	case JSON_TYPE_OXYGEN_REPOART:
-		oxygenFlowReport(pt_data_info);
+	case JSON_TYPE_GPS_REPOART:
+		//gpsReport(pt_data_info);
 	break;
     default:
         printf("jsonType is default+\r\n");

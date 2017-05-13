@@ -270,7 +270,7 @@ char XorCheckSum(char * pBuf, char len)
 //-----------------------------------------------------
 int getDataPkgFromSerial(char *conbined_buf, int *conbined_len, char *new_data, int new_data_len, char first_byte, char end_byte, int max_pkg_len)  //if end_byte ==0.means if recieved 0,then return;end_byte ==0xff, ignore the end byte;else,must match the end byte. 
 {
-	DBG("------%s,data len is %d,------\n",new_data,*conbined_len);
+	//DBG("------%s,data len is %d,------\n",new_data,*conbined_len);
 	memcpy(conbined_buf + *conbined_len, new_data, new_data_len);
 	*conbined_len=*conbined_len+new_data_len;
 	if(end_byte=='\0')
@@ -296,8 +296,9 @@ int getDataPkgFromSerial(char *conbined_buf, int *conbined_len, char *new_data, 
 		}
 		char xor;
 		int data_len,pkg_len;
-		data_len=*(conbined_buf+4);
-		pkg_len=data_len+8;
+		data_len=*(conbined_buf+5);
+		//printf("\ndata length is %d \n",data_len);
+		pkg_len=data_len+9;
 
 		if(*conbined_len>=max_pkg_len||*conbined_len>=pkg_len)
 			{
@@ -313,8 +314,8 @@ int getDataPkgFromSerial(char *conbined_buf, int *conbined_len, char *new_data, 
 			}
 					
 
-			xor=XorCheckSum(conbined_buf+2,data_len+3); //add the 2 byte of addr, 1 byte of len, so in total is 3bytes
-			if(xor==*(conbined_buf+data_len+5))   //24 40 00 00 len data xor
+			xor=XorCheckSum(conbined_buf+2,data_len+4); //add the 2 byte of addr, 1 byte of cmd, 1 byte of len, so in total is 4 bytes
+			if(xor==*(conbined_buf+data_len+6))   //24 40 00 00 cmd len data xor
 				return 1;					//here is packaged, return 0 means OK;
 			else
 				{

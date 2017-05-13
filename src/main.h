@@ -24,10 +24,20 @@ typedef unsigned char   uint8;
 typedef signed   short  int16;
 typedef unsigned short  uint16;
 
-typedef signed   long   int32;
-typedef unsigned long   uint32;
+typedef signed   int   int32;
+typedef unsigned int   uint32;
 
 typedef unsigned char   bool;
+
+/* takes a byte out of a uint32 : var - uint32,  ByteNum - byte to take out (0 - 3) */
+#define BREAK_UINT32( var, ByteNum ) \
+          (uint8)((uint32)(((var) >>((ByteNum) * 8)) & 0x00FF))
+
+#define BUILD_UINT32(Byte0, Byte1, Byte2, Byte3) \
+          ((uint32)((uint32)((Byte0) & 0x00FF) \
+          + ((uint32)((Byte1) & 0x00FF) << 8) \
+          + ((uint32)((Byte2) & 0x00FF) << 16) \
+          + ((uint32)((Byte3) & 0x00FF) << 24)))
 
 #define BUILD_UINT16(hiByte, loByte) \
           ((uint16)(((loByte) & 0x00FF) + (((hiByte) & 0x00FF) << 8)))
@@ -51,7 +61,7 @@ typedef enum
 	JSON_TYPE_CONTROL_CMD,
 	JSON_TYPE_DATA_REPOART,
 	JSON_TYPE_PRODUCT_INFO,
-	JSON_TYPE_OXYGEN_REPOART,
+	JSON_TYPE_GPS_REPOART,
 	JSON_TYPE_WIFI_CONFIG,
 	JSON_TYPE_INTERVAL_CONFIG,
 	JSON_TYPE_SERVER_CONFIG,
