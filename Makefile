@@ -78,7 +78,7 @@ endef
 # directory) to the install directory.
 define Package/gps_orientation_system/install
 	$(INSTALL_DIR) $(1)/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/spotInspection $(1)/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/gps_oritation_app $(1)/bin/
 	
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./init.d/* $(1)/etc/init.d/

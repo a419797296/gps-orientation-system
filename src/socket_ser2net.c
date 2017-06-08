@@ -97,7 +97,7 @@ static void *ser2net_thread(void *arg)
         return NULL;
       }  
 	//  allNum=0;
-	fullPackaged=getDataPkgFromSerial(buff, &allNum,package, nbyte, 0x24, '\n', 100);
+	fullPackaged=getDataPkgFromSerial(buff, &allNum,package, nbyte, 0x24, '\n', 33);
 		
       if(fullPackaged)
       {
