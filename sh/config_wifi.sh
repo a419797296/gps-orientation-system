@@ -16,7 +16,7 @@ then
         key=`uci get wireless.sta.key`
         echo the network have already connected,which SSID is $SSID, key is $key
 	/root/led.sh blink_slow tp-link:blue:system
-	spotInspection
+	gps_oritation_app
         exit
 fi
 
@@ -41,7 +41,7 @@ echo "checking sta mode"
                         ip=`ifconfig wlan0|awk -F'[ :]+' '/inet addr/{print $4}'`
                         echo "the current ip is $ip"
 			/root/led.sh blink_slow tp-link:blue:system
-			spotInspection
+			gps_oritation_app
                         exit
                 fi
                 i=$(($i+1))
